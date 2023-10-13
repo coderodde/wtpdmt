@@ -139,6 +139,13 @@ namespace com::github::coderodde::wtpdmt::util {
 					<< std::left
 					<< i.first
 					<< " -- Sets the process class to 0x"
+					<< std::hex
+					<< std::right
+					<< std::setfill('0')
+					<< std::setw(8)
+					<< i.second
+					<< " = "
+					<< std::dec
 					<< i.second
 					<< "\n";
 			}
@@ -150,18 +157,16 @@ namespace com::github::coderodde::wtpdmt::util {
 					<< std::setw(maximum_thread_priority_name_length)
 					<< std::left
 					<< i.first
-					<< " -- Sets the thread priority to ";
-
-				int priority = i.second;
-
-				if (priority >= -15 && priority <= 15) {
-					std::cout << std::dec;
-				}
-				else {
-					std::cout << "0x" << std::hex;
-				}
-
-				std::cout << priority << "\n";
+					<< " -- Sets the thread priority to 0x"
+					<< std::hex
+					<< std::right
+					<< std::setfill('0')
+					<< std::setw(8)
+					<< i.second
+					<< " = "
+					<< std::dec
+					<< i.second
+					<< "\n";
 			}
 
 			std::cout << "\n";

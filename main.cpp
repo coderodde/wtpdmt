@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) try {
 	string thread_priority_name = clp.getThreadPriorityName(clp.getThreadPriority());
 
 	size_t field_length = max(priority_class_name.length(), thread_priority_name.length());
-
+	
 	std::cout << "Number of iterations: " 
 		      << clp.getNumberOfIterations()
 		      << "\n";
@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) try {
 	std::cout << "Priority class:       " 
 		      << std::setw(field_length)
 		      << std::left 
+			  << std::setfill(' ')
 		      << priority_class_name
 		      << " (0x" 
 		      << std::setw(8)
@@ -47,6 +48,7 @@ int main(int argc, char* argv[]) try {
 	std::cout << "Thread priority:      " 
 		      << std::setw(field_length) 
 		      << std::left
+			  << std::setfill(' ')
 		      << thread_priority_name
 		      << " (0x"
 		      << std::setw(8)
@@ -54,6 +56,7 @@ int main(int argc, char* argv[]) try {
 		      << std::setfill('0')
 		      << std::hex
 		      << clp.getThreadPriority() 
+			  << " = "
 		      << std::dec
 		      << clp.getThreadPriority()
 		      << ")\n";
