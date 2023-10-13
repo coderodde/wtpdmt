@@ -114,8 +114,6 @@ namespace com::github::coderodde::wtpdmt::util {
 			return m_help_flag_present;
 		}
 
-
-
 		void printHelp() {
 			size_t maximum_class_name_length           = getMapStringKeyMaximumLength(m_priority_class_name_map);
 			size_t maximum_thread_priority_name_length = getMapStringKeyMaximumLength(m_thread_priority_name_map);
@@ -124,9 +122,9 @@ namespace com::github::coderodde::wtpdmt::util {
 
 			std::cout << programFileName
 				<< " "
-				<< "[" << FLAG_SHORT_PRIORITY_CLASS       << "|" << FLAG_LONG_PRIORITY_CLASS       << " = <CLASS>] "
-				<< "[" << FLAG_SHORT_THREAD_PRIORITY      << "|" << FLAG_LONG_THREAD_PRIORITY      << " = <THREAD>] "
-				<< "[" << FLAG_SHORT_NUMBER_OF_ITERATIONS << "|" << FLAG_LONG_NUMBER_OF_ITERATIONS << " = <ITERATIONS>] "
+				<< "[" << FLAG_SHORT_PRIORITY_CLASS       << "|" << FLAG_LONG_PRIORITY_CLASS       << " <CLASS>] "
+				<< "[" << FLAG_SHORT_THREAD_PRIORITY      << "|" << FLAG_LONG_THREAD_PRIORITY      << " <THREAD>] "
+				<< "[" << FLAG_SHORT_NUMBER_OF_ITERATIONS << "|" << FLAG_LONG_NUMBER_OF_ITERATIONS << " <ITERATIONS>] "
 				<< "[" << FLAG_SHORT_HELP                 << "|" << FLAG_LONG_HELP                 << "]\n"
 				<< "where:\n\n"
 				<< "  <CLASS> is one of: \n";
@@ -134,9 +132,11 @@ namespace com::github::coderodde::wtpdmt::util {
 			std::cout << std::hex << std::setfill(' ');
 
 			for (auto& i : m_priority_class_name_map) {
-				std::cout << "    "
+				std::cout 
+				    << "    "
 					<< std::setw(maximum_class_name_length)
 					<< std::left
+					<< std::setfill(' ')
 					<< i.first
 					<< " -- Sets the process class to 0x"
 					<< std::hex
@@ -156,6 +156,7 @@ namespace com::github::coderodde::wtpdmt::util {
 				std::cout << "    "
 					<< std::setw(maximum_thread_priority_name_length)
 					<< std::left
+					<< std::setfill(' ')
 					<< i.first
 					<< " -- Sets the thread priority to 0x"
 					<< std::hex
@@ -180,19 +181,38 @@ namespace com::github::coderodde::wtpdmt::util {
 			}
 
 			std::stringstream ss;
-			ss << "Unknown priorirty class: " << std::hex << priority_class << ".";
+			
+			ss << "Unknown priority class: 0x"
+			   << std::setw(8)
+			   << std::right
+			   << std::setfill('0')
+			   << std::hex 
+			   << priority_class 
+			   << " = " 
+			   << std::dec 
+			   << priority_class 
+			   << ".";
+
 			throw std::logic_error{ ss.str() };
 		}
 
-		string getThreadPriorityName(int threadPriority) {
+		string getThreadPriorityName(int thread_priority) {
 			for (const auto& p : m_thread_priority_name_map) {
-				if (p.second == threadPriority) {
+				if (p.second == thread_priority) {
 					return p.first;
 				}
 			}
 
 			std::stringstream ss;
-			ss << "Unknown thread priority: " << threadPriority << ".";
+
+			ss << "Unknown thread priority: 0x" 
+			   << std::hex
+			   << thread_priority 
+			   << " = "
+			   << std::dec
+			   << thread_priority
+			   << ".";
+
 			throw std::logic_error{ ss.str() };
 		}
 
@@ -314,12 +334,18 @@ namespace com::github::coderodde::wtpdmt::util {
 		}
 
 		void processFlagPair() {
-			string flag = m_argv[m_argument_index++];
+			string flag = m_argv[m_argument_index];
+
+			if (flag == FLAG_LONG_HELP || flag == FLAG_SHORT_HELP) {
+				m_help_flag_present = true;
+				return;
+			}
 
 			// First check that the currently indexed flag is correct:
 			checkFlagIsValid(flag);
 
 			// Check that there is more parameters in the command line:
+			m_argument_index++;
 			checkMoreParametersAvailable();
 
 			// Process the flag:
@@ -342,6 +368,8 @@ namespace com::github::coderodde::wtpdmt::util {
 				throw std::logic_error{ ss.str()};
 			}
 
+			m_iteration_flag_present = true;
+
 			std::stringstream ss;
 			ss << m_argv[m_argument_index++];
 			ss >> m_iterations;
@@ -362,26 +390,36 @@ namespace com::github::coderodde::wtpdmt::util {
 			auto pair = m_priority_class_name_map.find(m_argv[m_argument_index]);
 
 			if (pair == m_priority_class_name_map.cend()) {
-				std::istringstream iss(m_argv[m_argument_index]);
-				iss >> std::hex >> m_priority_class;
 
-				if (iss.fail() || iss.bad()) {
-					// Reading as hexadecimal failed.
-					std::cout << "HELLO\n";
-					std::istringstream iss2(m_argv[m_argument_index]);
-					iss2 >> m_priority_class;
+				string value = m_argv[m_argument_index];
 
-					if (iss2.fail() || iss2.bad()) {
+				if (value.length() >= 3 && (value.substr(0, 2) == "0x" || value.substr(0, 2) == "0X")) {
+					// Try parse as hexadecimal:
+					std::istringstream iss(value);
+					iss >> std::hex >> m_priority_class;
+
+					if (iss.fail() || iss.bad()) {
 						std::stringstream ss;
-						ss << "Could not parse '" << m_argv[m_argument_index] << "' as a priority class.";
+						ss << "Could not parse '" << value << "' as a valid hexadecimal value.";
 						throw std::logic_error{ ss.str() };
 					}
 				}
-			}
-			else {
+				else {
+					// Try parse as decimal:
+					std::istringstream iss(value);
+					iss >> std::dec >> m_priority_class;
+
+					if (iss.fail() || iss.bad()) {
+						std::stringstream ss;
+						ss << "Could not parse '" << value << "' as a valid decimal value.";
+						throw std::logic_error{ ss.str() };
+					}
+				}				
+			} else {
 				m_priority_class = pair->second;
 			}
 
+			m_priority_class_flag_present = true;
 			m_argument_index++;
 		}
 
@@ -400,26 +438,34 @@ namespace com::github::coderodde::wtpdmt::util {
 			auto pair = m_thread_priority_name_map.find(m_argv[m_argument_index]);
 
 			if (pair == m_thread_priority_name_map.cend()) {
-				std::istringstream iss(m_argv[m_argument_index]);
-				iss >> m_thread_priority;
+				string value = m_argv[m_argument_index];
 
-				if (iss.fail() || iss.bad()) {
-					// Reading as decimal failed. Try as hex:
-					std::cout << "WORLD\n";
-					std::istringstream iss2(m_argv[m_argument_index]);
-					iss2 >> std::hex >> m_thread_priority;
+				if (value.length() >= 3 && (value.substr(0, 2) == "0x" || value.substr(0, 2) == "0X")) {
+					// Try parse as hexadecimal:
+					std::istringstream iss(value);
+					iss >> std::hex >> m_thread_priority;
 
-					if (iss2.fail() || iss2.bad()) {
+					if (iss.fail() || iss.bad()) {
 						std::stringstream ss;
-						ss << "Could not parse '" << m_argv[m_argument_index] << "' as a thread priority.";
+						ss << "Could not parse '" << value << "' as a valid hexadecimal value.";
+						throw std::logic_error{ ss.str() };
+					}
+				} else {
+					// Try parse as decimal:
+					std::istringstream iss(value);
+					iss >> std::dec >> m_thread_priority;
+
+					if (iss.fail() || iss.bad()) {
+						std::stringstream ss;
+						ss << "Could not parse '" << value << "' as a valid decimal value.";
 						throw std::logic_error{ ss.str() };
 					}
 				}
-			}
-			else {
+			} else {
 				m_thread_priority = pair->second;
 			}
 
+			m_thread_priority_flag_present = true;
 			m_argument_index++;
 		}
 	};
