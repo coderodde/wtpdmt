@@ -33,16 +33,29 @@ int main(int argc, char* argv[]) try {
 		      << std::setw(field_length)
 		      << std::left 
 		      << priority_class_name
-		      << " (" 
-		      << clp.getPriorityClass() 
+		      << " (0x" 
+		      << std::setw(8)
+		      << std::right
+		      << std::setfill('0')
+		      << std::hex
+		      << clp.getPriorityClass()
+		      << " = "
+		      << std::dec
+		      << clp.getPriorityClass()
 		      << ")\n";
 
 	std::cout << "Thread priority:      " 
 		      << std::setw(field_length) 
 		      << std::left
 		      << thread_priority_name
-		      << " (" 
+		      << " (0x"
+		      << std::setw(8)
+		      << std::right
+		      << std::setfill('0')
+		      << std::hex
 		      << clp.getThreadPriority() 
+		      << std::dec
+		      << clp.getThreadPriority()
 		      << ")\n";
 
 	std::cout << "Help flag on:         " << std::boolalpha << clp.helpRequested() << "\n";

@@ -126,11 +126,12 @@ namespace com::github::coderodde::wtpdmt::util {
 				<< " "
 				<< "[" << FLAG_SHORT_PRIORITY_CLASS       << "|" << FLAG_LONG_PRIORITY_CLASS       << " = <CLASS>] "
 				<< "[" << FLAG_SHORT_THREAD_PRIORITY      << "|" << FLAG_LONG_THREAD_PRIORITY      << " = <THREAD>] "
-				<< "[" << FLAG_SHORT_NUMBER_OF_ITERATIONS << "|" << FLAG_LONG_NUMBER_OF_ITERATIONS << " = <ITERATIONS>]\n"
+				<< "[" << FLAG_SHORT_NUMBER_OF_ITERATIONS << "|" << FLAG_LONG_NUMBER_OF_ITERATIONS << " = <ITERATIONS>] "
+				<< "[" << FLAG_SHORT_HELP                 << "|" << FLAG_LONG_HELP                 << "]\n"
 				<< "where:\n\n"
 				<< "  <CLASS> is one of: \n";
 
-			std::cout << std::hex;
+			std::cout << std::hex << std::setfill(' ');
 
 			for (auto& i : m_priority_class_name_map) {
 				std::cout << "    "
@@ -357,13 +358,13 @@ namespace com::github::coderodde::wtpdmt::util {
 
 			if (pair == m_priority_class_name_map.cend()) {
 				std::istringstream iss(m_argv[m_argument_index]);
-				iss >> m_priority_class;
+				iss >> std::hex >> m_priority_class;
 
 				if (iss.fail() || iss.bad()) {
-					// Reading as decimal failed.
+					// Reading as hexadecimal failed.
 					std::cout << "HELLO\n";
 					std::istringstream iss2(m_argv[m_argument_index]);
-					iss2 >> std::hex >> m_priority_class;
+					iss2 >> m_priority_class;
 
 					if (iss2.fail() || iss2.bad()) {
 						std::stringstream ss;
