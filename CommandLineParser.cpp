@@ -92,7 +92,7 @@ namespace com::github::coderodde::wtpdmt::util {
 		return m_help_flag_present;
 	}
 
-	void CommandLineHelper::printHelp() {
+	void CommandLineParser::printHelp() {
 		size_t maximum_class_name_length = getMapStringKeyMaximumLength(m_priority_class_name_map);
 		size_t maximum_thread_priority_name_length = getMapStringKeyMaximumLength(m_thread_priority_name_map);
 
