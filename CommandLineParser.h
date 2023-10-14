@@ -240,22 +240,22 @@ namespace com::github::coderodde::wtpdmt::util {
 		void loadDispatchMap() {
 			std::function<void(CommandLineParser&)> function_flag_iterations = &CommandLineParser::processIterationFlags;
 
-			m_flag_processor_map[FLAG_LONG_NUMBER_OF_ITERATIONS] = function_flag_iterations;
+			m_flag_processor_map[FLAG_LONG_NUMBER_OF_ITERATIONS]  = function_flag_iterations;
 			m_flag_processor_map[FLAG_SHORT_NUMBER_OF_ITERATIONS] = function_flag_iterations;
 
 			std::function<void(CommandLineParser&)> function_flag_priority_class = &CommandLineParser::processPriorityClassFlags;
 
-			m_flag_processor_map[FLAG_LONG_PRIORITY_CLASS] = function_flag_priority_class;
+			m_flag_processor_map[FLAG_LONG_PRIORITY_CLASS]  = function_flag_priority_class;
 			m_flag_processor_map[FLAG_SHORT_PRIORITY_CLASS] = function_flag_priority_class;
 
 			std::function<void(CommandLineParser&)> function_flag_thread_priority = &CommandLineParser::processThreadPriorityFlags;
 
-			m_flag_processor_map[FLAG_LONG_THREAD_PRIORITY] = function_flag_thread_priority;
+			m_flag_processor_map[FLAG_LONG_THREAD_PRIORITY]  = function_flag_thread_priority;
 			m_flag_processor_map[FLAG_SHORT_THREAD_PRIORITY] = function_flag_thread_priority;
 
 			std::function<void(CommandLineParser&)> function_flag_help = &CommandLineParser::processHelpFlags;
 
-			m_flag_processor_map[FLAG_LONG_HELP] = function_flag_help;
+			m_flag_processor_map[FLAG_LONG_HELP]  = function_flag_help;
 			m_flag_processor_map[FLAG_SHORT_HELP] = function_flag_help;
 		}
 
@@ -271,14 +271,14 @@ namespace com::github::coderodde::wtpdmt::util {
 		}
 
 		void loadThreadPriorityNameMap() {
-			m_thread_priority_name_map[THREAD_MODE_BACKGROUND_BEGIN_STR] = THREAD_MODE_BACKGROUND_BEGIN;
-			m_thread_priority_name_map[THREAD_MODE_BACKGROUND_END_STR] = THREAD_MODE_BACKGROUND_END;
-			m_thread_priority_name_map[THREAD_PRIORITY_ABOVE_NORMAL_STR] = THREAD_PRIORITY_ABOVE_NORMAL;
-			m_thread_priority_name_map[THREAD_PRIORITY_BELOW_NORMAL_STR] = THREAD_PRIORITY_BELOW_NORMAL;
-			m_thread_priority_name_map[THREAD_PRIORITY_HIGHEST_STR] = THREAD_PRIORITY_HIGHEST;
-			m_thread_priority_name_map[THREAD_PRIORITY_IDLE_STR] = THREAD_PRIORITY_IDLE;
-			m_thread_priority_name_map[THREAD_PRIORITY_LOWEST_STR] = THREAD_PRIORITY_LOWEST;
-			m_thread_priority_name_map[THREAD_PRIORITY_NORMAL_STR] = THREAD_PRIORITY_NORMAL;
+			m_thread_priority_name_map[THREAD_MODE_BACKGROUND_BEGIN_STR]  = THREAD_MODE_BACKGROUND_BEGIN;
+			m_thread_priority_name_map[THREAD_MODE_BACKGROUND_END_STR]    = THREAD_MODE_BACKGROUND_END;
+			m_thread_priority_name_map[THREAD_PRIORITY_ABOVE_NORMAL_STR]  = THREAD_PRIORITY_ABOVE_NORMAL;
+			m_thread_priority_name_map[THREAD_PRIORITY_BELOW_NORMAL_STR]  = THREAD_PRIORITY_BELOW_NORMAL;
+			m_thread_priority_name_map[THREAD_PRIORITY_HIGHEST_STR]       = THREAD_PRIORITY_HIGHEST;
+			m_thread_priority_name_map[THREAD_PRIORITY_IDLE_STR]          = THREAD_PRIORITY_IDLE;
+			m_thread_priority_name_map[THREAD_PRIORITY_LOWEST_STR]        = THREAD_PRIORITY_LOWEST;
+			m_thread_priority_name_map[THREAD_PRIORITY_NORMAL_STR]        = THREAD_PRIORITY_NORMAL;
 			m_thread_priority_name_map[THREAD_PRIORITY_TIME_CRITICAL_STR] = THREAD_PRIORITY_TIME_CRITICAL;
 		}
 

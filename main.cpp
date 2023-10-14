@@ -63,13 +63,14 @@ int main(int argc, char* argv[]) try {
 	string priority_class_name  = clp.getPriorityClassName(clp.getPriorityClass());
 	string thread_priority_name = clp.getThreadPriorityName(clp.getThreadPriority());
 
-	size_t field_length = max(priority_class_name.length(), thread_priority_name.length());
+	size_t field_length = max(priority_class_name.length(), 
+							  thread_priority_name.length());
 	
-	std::cout << "Number of iterations:           " 
+	std::cout << "Number of iterations:      " 
 		      << clp.getNumberOfIterations()
 		      << "\n";
 
-	std::cout << "Requested priority class:       " 
+	std::cout << "Requested priority class:  "  
 		      << std::setw(field_length)
 		      << std::left 
 			  << std::setfill(' ')
@@ -85,7 +86,7 @@ int main(int argc, char* argv[]) try {
 		      << clp.getPriorityClass()
 		      << ")\n";
 
-	std::cout << "Requested thread priority:      " 
+	std::cout << "Requested thread priority: " 
 		      << std::setw(field_length) 
 		      << std::left
 			  << std::setfill(' ')
@@ -131,9 +132,10 @@ int main(int argc, char* argv[]) try {
 		ULONGLONG tb = GetTickCount64();
 		ULONGLONG duration = tb - ta;
 		maximumDuration = max(maximumDuration, duration);
+		ta = tb;
 	}
 
-	std::cout << maximumDuration << "\n";
+	std::cout << "INFO: Maximum sleep duration: " << maximumDuration << "\n";
 	return EXIT_SUCCESS;
 } catch (std::logic_error& err) {
 	std::cerr << "ERROR: " << err.what() << "\n";
