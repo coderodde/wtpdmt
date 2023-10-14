@@ -19,11 +19,11 @@ int main(int argc, char* argv[]) try {
 
 	size_t field_length = max(priority_class_name.length(), thread_priority_name.length());
 	
-	std::cout << "Number of iterations:           " 
+	std::cout << "Number of iterations:      " 
 		      << clp.getNumberOfIterations()
 		      << "\n";
 
-	std::cout << "Requested priority class:       " 
+	std::cout << "Requested priority class:  " 
 		      << std::setw(field_length)
 		      << std::left 
 			  << std::setfill(' ')
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) try {
 		      << clp.getPriorityClass()
 		      << ")\n";
 
-	std::cout << "Requested thread priority:      " 
+	std::cout << "Requested thread priority: " 
 		      << std::setw(field_length) 
 		      << std::left
 			  << std::setfill(' ')
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) try {
 			  << " = "
 		      << std::dec
 		      << clp.getThreadPriority()
-		      << ")\n";
+		      << ")\n\n";
 
 	HANDLE process_handle = GetCurrentProcess();
 	HANDLE thread_handle  = GetCurrentThread();
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) try {
 
 	std::cout << "INFO: Effective thread priority is "
 			  << clp.getThreadPriorityName(GetThreadPriority(thread_handle))
-			  << ".\n";
+			  << ".\n\n";
 
 	ULONGLONG ta = GetTickCount64();
 	ULONGLONG maximumDuration = 0;

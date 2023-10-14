@@ -86,6 +86,25 @@ bool com::github::coderodde::wtpdmt::util::CommandLineParser::helpRequested() {
 	return m_help_flag_present;
 }
 
+template<class Value>
+size_t getMapStringKeyMaximumLength(std::map<string, Value>& map) {
+	size_t maximum_string_length = 0;
+
+	for (const auto& i : map) {
+		maximum_string_length = max(maximum_string_length, i.first.length());
+	}
+
+	return maximum_string_length;
+}
+
+size_t com::github::coderodde::wtpdmt::util::CommandLineParser::getMaximumPriorityClassNameLength() {
+	return getMapStringKeyMaximumLength(m_priority_class_name_map);
+}
+
+size_t com::github::coderodde::wtpdmt::util::CommandLineParser::getMaximumThreadPriorityNameLength() {
+	return getMapStringKeyMaximumLength(m_thread_priority_name_map);
+}
+
 void com::github::coderodde::wtpdmt::util::CommandLineParser::printHelp() {
 	size_t maximum_class_name_length = getMapStringKeyMaximumLength(m_priority_class_name_map);
 	size_t maximum_thread_priority_name_length = getMapStringKeyMaximumLength(m_thread_priority_name_map);
@@ -186,25 +205,6 @@ string com::github::coderodde::wtpdmt::util::CommandLineParser::getThreadPriorit
 		<< ".";
 
 	throw std::logic_error{ ss.str() };
-}
-
-size_t com::github::coderodde::wtpdmt::util::CommandLineParser::getMaximumPriorityClassNameLength() {
-	return getMapStringKeyMaximumLength(m_priority_class_name_map);
-}
-
-size_t com::github::coderodde::wtpdmt::util::CommandLineParser::getMaximumThreadPriorityNameLength() {
-	return getMapStringKeyMaximumLength(m_thread_priority_name_map);
-}
-
-template<class Value>
-size_t getMapStringKeyMaximumLength(std::map<string, Value>& map) {
-	size_t maximum_string_length = 0;
-
-	for (const auto& i : map) {
-		maximum_string_length = max(maximum_string_length, i.first.length());
-	}
-
-	return maximum_string_length;
 }
 
 void com::github::coderodde::wtpdmt::util::CommandLineParser::loadDispatchMap() {
