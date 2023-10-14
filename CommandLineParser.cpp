@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <regex>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -12,6 +13,12 @@
 #include <windows.h>
 
 using std::string;
+
+static const string HEXADECIMAL_REGEX_PATTERN = "0[xX
+
+static bool IsHexadecimalString(string& str) {
+	return false;
+}
 
 // Priority class names:
 static const string ABOVE_NORMAL_PRIORITY_CLASS_STR   = "ABOVE_NORMAL_PRIORITY_CLASS";   // 0x00008000
@@ -139,6 +146,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::printHelp() {
             << " = "
             << std::dec
             << i.second
+			<< (i.second == DEFAULT_M_PRIORITY_CLASS ? " (default)" : "")
             << "\n";
     }
 
@@ -160,6 +168,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::printHelp() {
             << " = "
             << std::dec
             << i.second
+			<< (i.second == DEFAULT_M_THREAD_PRIORITY ? " (default)" : "")
             << "\n";
     }
 
@@ -375,8 +384,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityCla
                 ss << "Could not parse '" << value << "' as a valid hexadecimal value.";
                 throw std::logic_error{ ss.str() };
             }
-        }
-        else {
+        } else {
             // Try parse as decimal:
             std::istringstream iss(value);
             iss >> std::dec >> m_priority_class;
@@ -387,8 +395,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityCla
                 throw std::logic_error{ ss.str() };
             }
         }
-    }
-    else {
+    } else {
         m_priority_class = pair->second;
     }
 
@@ -423,8 +430,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processThreadPrior
                 ss << "Could not parse '" << value << "' as a valid hexadecimal value.";
                 throw std::logic_error{ ss.str() };
             }
-        }
-        else {
+        } else {
             // Try parse as decimal:
             std::istringstream iss(value);
             iss >> std::dec >> m_thread_priority;
@@ -435,8 +441,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processThreadPrior
                 throw std::logic_error{ ss.str() };
             }
         }
-    }
-    else {
+    } else {
         m_thread_priority = pair->second;
     }
 
