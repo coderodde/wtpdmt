@@ -42,6 +42,7 @@ namespace com::github::coderodde::wtpdmt::util {
 		std::unordered_set<string> m_flag_set;
 
 	public:
+	
 		CommandLineParser(int argc, char* argv[]);
 
 		size_t getNumberOfIterations();
@@ -55,7 +56,7 @@ namespace com::github::coderodde::wtpdmt::util {
 		size_t getMaximumThreadPriorityNameLength();
 
 	private:
-
+	
 		void loadDispatchMap();
 		void loadPriorityClassNameMap();
 		void loadThreadPriorityNameMap();
