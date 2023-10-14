@@ -14,10 +14,11 @@
 
 using std::string;
 
-static const string HEXADECIMAL_REGEX_PATTERN = "0[xX
+static const string HEXADECIMAL_REGEX_PATTERN = "0[xX][0-9a-fA-F]{1,8}";
+static const std::regex HEXADECIMAL_REGEX = std::regex(HEXADECIMAL_REGEX_PATTERN);
 
 static bool IsHexadecimalString(string& str) {
-	return false;
+	return std::regex_search(str, HEXADECIMAL_REGEX);
 }
 
 // Priority class names:
@@ -350,8 +351,12 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processIterationFl
     }
 
     m_iteration_flag_present = true;
+	string value = m_argv[m_argument_index];
+    std::istringstream ss;
+    ss << value
+	if (IsHexadecimalString(value)) {
+	}
 
-    std::stringstream ss;
     ss << m_argv[m_argument_index++];
     ss >> m_iterations;
 }
@@ -374,7 +379,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityCla
 
         string value = m_argv[m_argument_index];
 
-        if (value.length() >= 3 && (value.substr(0, 2) == "0x" || value.substr(0, 2) == "0X")) {
+        if (IsHexadecimalString(value)) {
             // Try parse as hexadecimal:
             std::istringstream iss(value);
             iss >> std::hex >> m_priority_class;
@@ -420,7 +425,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processThreadPrior
     if (pair == m_thread_priority_name_map.cend()) {
         string value = m_argv[m_argument_index];
 
-        if (value.length() >= 3 && (value.substr(0, 2) == "0x" || value.substr(0, 2) == "0X")) {
+        if (IsHexadecimalString(value)) {
             // Try parse as hexadecimal:
             std::istringstream iss(value);
             iss >> std::hex >> m_thread_priority;
