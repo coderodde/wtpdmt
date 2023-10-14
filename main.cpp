@@ -17,7 +17,8 @@ int main(int argc, char* argv[]) try {
 	string priority_class_name  = clp.getPriorityClassName(clp.getPriorityClass());
 	string thread_priority_name = clp.getThreadPriorityName(clp.getThreadPriority());
 
-	size_t field_length = max(priority_class_name.length(), thread_priority_name.length());
+	size_t field_length = max(priority_class_name.length(),
+							  thread_priority_name.length());
 	
 	std::cout << "Number of iterations:      " 
 		      << clp.getNumberOfIterations()
