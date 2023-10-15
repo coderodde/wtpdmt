@@ -71,6 +71,8 @@ namespace com::github::coderodde::wtpdmt::util {
 		void processIterationFlags();
 		void processPriorityClassFlags();
 		void processThreadPriorityFlags();
+		template<class T>
+		void parseValue(string& value, T* target_ptr);
 	};
 } // End of namespace com::github::coderodde::wtpdmt::util
 #endif // COM_GITHUB_CODERODDE_WTPDMT_UTIL_COMMAND_LINE_PARSER_HPP

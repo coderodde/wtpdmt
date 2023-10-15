@@ -14,10 +14,10 @@
 
 using std::string;
 
-static const string HEXADECIMAL_REGEX_PATTERN = "0[xX][0-9a-fA-F]{1,8}";
+static const string HEXADECIMAL_REGEX_PATTERN = "0[xX]([0-9a-fA-F]{1,8})";
 static const std::regex HEXADECIMAL_REGEX = std::regex(HEXADECIMAL_REGEX_PATTERN);
 
-static const string DECIMAL_REGEX_PATTERN = "(|-)[0-9]+";
+static const string DECIMAL_REGEX_PATTERN = "-?([0-9]{1,10})";
 static const std::regex DECIMAL_REGEX = std::regex(DECIMAL_REGEX_PATTERN);
 
 static bool IsHexadecimalString(string& str) {
@@ -364,6 +364,44 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processIterationFl
     m_argument_index++;
 }
 
+template<class T>
+void com::github::coderodde::wtpdmt::util::CommandLineParser::parseValue(string& value, T* target_ptr) {
+	if (IsHexadecimalString(value)) {
+        // Try parse as hexadecimal:
+		std::istringstream iss(value);
+		iss >> std::hex >> *target_ptr;
+
+		if (iss.fail() || iss.bad()) {
+			std::stringstream ss;
+			ss << "Could not parse '"
+			   << value
+			   << "' as a valid hexadecimal value.";
+
+			throw std::logic_error{ ss.str() };
+		}
+	} else if (IsDecimalString(value)) {	
+		// Try parse as decimal:
+		std::istringstream iss(value);
+		iss >> *target_ptr;
+
+		if (iss.fail() || iss.bad()) {
+			std::stringstream ss;
+			ss << "Could not parse '"
+			   << value
+			   << "' as a valid decimal value.";
+
+			throw std::logic_error{ ss.str() };
+		}
+	} else {
+		std::stringstream ss;
+		ss << "Could not parse '"
+		   << value
+		   << "' as a hexadecimal or decimal value.";
+
+		throw std::logic_error{ ss.str() };
+	}
+}
+
 void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityClassFlags() {
     if (m_priority_class_flag_present) {
         std::stringstream ss;
@@ -380,42 +418,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityCla
 
     if (pair == m_priority_class_name_map.cend()) {
         string value = m_argv[m_argument_index];
-
-        if (IsHexadecimalString(value)) {
-            // Try parse as hexadecimal:
-            std::istringstream iss(value);
-            iss >> std::hex >> m_priority_class;
-
-            if (iss.fail() || iss.bad()) {
-                std::stringstream ss;
-                ss << "Could not parse '"
-                   << value
-                   << "' as a valid hexadecimal value.";
-
-                throw std::logic_error{ ss.str() };
-            }
-        } else if (IsDecimalString(value)) {
-            // Try parse as decimal:
-            std::istringstream iss(value);
-            iss >> m_thread_priority;
-
-            if (iss.fail() || iss.bad()) {
-                std::stringstream ss;
-                ss << "Could not parse '"
-                   << value
-                   << "' as a valid decimal value.";
-
-                throw std::logic_error{ ss.str() };
-            }
-        } else {
-            // Try parse as decimal:
-            std::stringstream ss;
-            ss << "Could not parse '"
-               << value
-               << "' as a hexadecimal or decimal value.";
-
-            throw std::logic_error{ ss.str() };
-        }
+        parseValue(value, &m_priority_class);
     } else {
         m_priority_class = pair->second;
     }
@@ -440,41 +443,7 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processThreadPrior
 
     if (pair == m_thread_priority_name_map.cend()) {
         string value = m_argv[m_argument_index];
-
-        if (IsHexadecimalString(value)) {
-            // Try parse as hexadecimal:
-            std::istringstream iss(value);
-            iss >> std::hex >> m_thread_priority;
-
-            if (iss.fail() || iss.bad()) {
-                std::stringstream ss;
-                ss << "Could not parse '"
-                   << value
-                   << "' as a valid hexadecimal value.";
-
-                throw std::logic_error{ ss.str() };
-            }
-        } else if (IsDecimalString(value)) {
-            // Try parse as decimal:
-            std::istringstream iss(value);
-            iss >> m_thread_priority;
-
-            if (iss.fail() || iss.bad()) {
-                std::stringstream ss;
-                ss << "Could not parse '"
-                   << value
-                   << "' as a valid decimal value.";
-
-                throw std::logic_error{ ss.str() };
-            }
-        } else {
-            std::stringstream ss;
-            ss << "Could not parse '"
-               << value
-               << "' as a hexadecimal or decimal value.";
-
-            throw std::logic_error{ ss.str() };
-        }
+		parseValue(value, &m_thread_priority);
     } else {
         m_thread_priority = pair->second;
     }
