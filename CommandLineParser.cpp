@@ -14,10 +14,14 @@
 
 using std::string;
 
-static const string HEXADECIMAL_REGEX_PATTERN = "0[xX][0-9a-fA-F]{1,8}";
+static const string HEXADECIMAL_REGEX_PATTERN = "0[xX]([0-9a-fA-F]{1,8})";
 static const std::regex HEXADECIMAL_REGEX = std::regex(HEXADECIMAL_REGEX_PATTERN);
 
 static bool IsHexadecimalString(string& str) {
+	if (str.length() < 3) {
+		return false;
+	}
+	
 	return std::regex_search(str, HEXADECIMAL_REGEX);
 }
 
@@ -352,13 +356,9 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processIterationFl
 
     m_iteration_flag_present = true;
 	string value = m_argv[m_argument_index];
-    std::istringstream ss;
-    ss << value
-	if (IsHexadecimalString(value)) {
-	}
-
-    ss << m_argv[m_argument_index++];
-    ss >> m_iterations;
+    std::istringstream ss(value);
+	ss >> m_iterations;
+	m_argument_index++;
 }
 
 void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityClassFlags() {
@@ -376,7 +376,6 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityCla
     auto pair = m_priority_class_name_map.find(m_argv[m_argument_index]);
 
     if (pair == m_priority_class_name_map.cend()) {
-
         string value = m_argv[m_argument_index];
 
         if (IsHexadecimalString(value)) {
