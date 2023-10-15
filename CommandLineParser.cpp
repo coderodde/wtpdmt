@@ -18,10 +18,6 @@ static const string HEXADECIMAL_REGEX_PATTERN = "0[xX]([0-9a-fA-F]{1,8})";
 static const std::regex HEXADECIMAL_REGEX = std::regex(HEXADECIMAL_REGEX_PATTERN);
 
 static bool IsHexadecimalString(string& str) {
-	if (str.length() < 3) {
-		return false;
-	}
-	
 	return std::regex_search(str, HEXADECIMAL_REGEX);
 }
 
@@ -378,9 +374,15 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processPriorityCla
     if (pair == m_priority_class_name_map.cend()) {
         string value = m_argv[m_argument_index];
 
+        if (value == "0x" || value == "0X") {
+            std::stringstream ss;
+            ss << value << ": not a hexadecimal number.";
+            throw std::logic_error{ ss.str() };
+        }
+
         if (IsHexadecimalString(value)) {
             // Try parse as hexadecimal:
-            std::istringstream iss(value);
+            std::istringstream iss(value.substr(2));
             iss >> std::hex >> m_priority_class;
 
             if (iss.fail() || iss.bad()) {
@@ -424,9 +426,15 @@ void com::github::coderodde::wtpdmt::util::CommandLineParser::processThreadPrior
     if (pair == m_thread_priority_name_map.cend()) {
         string value = m_argv[m_argument_index];
 
+        if (value == "0x" || value == "0X") {
+            std::stringstream ss;
+            ss << value << ": not a hexadecimal number.";
+            throw std::logic_error{ ss.str() };
+        }
+
         if (IsHexadecimalString(value)) {
             // Try parse as hexadecimal:
-            std::istringstream iss(value);
+            std::istringstream iss(value.substr(2));
             iss >> std::hex >> m_thread_priority;
 
             if (iss.fail() || iss.bad()) {
