@@ -14,10 +14,10 @@
 
 using std::string;
 
-static const string HEXADECIMAL_REGEX_PATTERN = "0[xX][0-9a-fA-F]{1,8}";
+static const string HEXADECIMAL_REGEX_PATTERN = "0[xX]([0-9a-fA-F]){1,8}";
 static const std::regex HEXADECIMAL_REGEX = std::regex(HEXADECIMAL_REGEX_PATTERN);
 
-static const string DECIMAL_REGEX_PATTERN = "(|-)[0-9]+";
+static const string DECIMAL_REGEX_PATTERN = "-?([0-9]){1,10}";
 static const std::regex DECIMAL_REGEX = std::regex(DECIMAL_REGEX_PATTERN);
 
 static bool IsHexadecimalString(string& str) {
